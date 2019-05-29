@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+{% block head %}
+	<title>{{post['title']}}</title>
+{% endblock %}
+{% block body %}
+	<h1>{{post['title']}}</h1>
+	<p>{{post['text']}}</p>
+	<small>Created by <b>{{post['username']}}</b> on <b>{{post['created_at']}}</b></small>		
+	<hr></br>
+	{% from "formhelpers.html" import render_field %}
+	{% if session.logged_in %}
+	<form method='POST' action=''>
+		<div class='form-group'>
+			{{render_field(form.comment,class_='form-control')}}
+		</div>
+		<input type="hidden" name="parent_id" id="parent_id" value="0" />
+		<p><input type="submit" class="btn btn-primary" value="Submit"></p>
+	</form>
+	</br>	
+	{% else %}
+	    <p>You have to login first to comment ;)</p>
+	{% endif %}
+
+	{% for item in commentaria %} 
+	        <div  style="margin-left:{{item['depth'] * 2}}0px" >
+                    <p>{{item['text']}}<small><small><small> by {{item['username']}}</small></small></small></p>
+                    {% if session.logged_in %}
+                    <form method='POST' action=''>
+		<div class='form-group'>
+			{{render_field(form.comment,class_='form-control')}}
+		</div>
+		<input type="hidden" name="parent_id" id="parent_id" value={{item['id']}} />
+		<p><input type="submit" class="btn btn-primary" value="Submit"></p>
+	</form>
+	{% endif %}
+            </div>
+        {% endfor %}
+{% endblock %}
